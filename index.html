@@ -1,0 +1,810 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>CERIABET • Member Site</title>
+  <style>
+    :root{
+      --bg:#07060a; --stroke:rgba(255,255,255,.10);
+      --gold:#f5d36a; --gold2:#caa24e;
+      --text:#f6f2ff; --muted:rgba(246,242,255,.72);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
+      color:var(--text); background:var(--bg); overflow-x:hidden;
+    }
+
+    /* Background */
+    .bg{position:fixed; inset:0; z-index:-2;
+      background:
+        radial-gradient(1200px 600px at 50% -10%, rgba(245,211,106,.18), transparent 55%),
+        linear-gradient(180deg, #05040a, #07060a 40%, #06050a);
+    }
+    .bg::before{
+      content:""; position:absolute; inset:0;
+      background:url("https://plcl.me/images/wap3j.jpg") center/cover no-repeat;
+      opacity:.18; filter:saturate(.9) contrast(1.05);
+    }
+
+    .wrap{width:min(980px, 92vw); margin:0 auto; padding:26px 0 64px;}
+    .panel{
+      border:1px solid rgba(255,255,255,.10);
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      backdrop-filter: blur(10px);
+      border-radius: var(--radius);
+      box-shadow: 0 24px 70px rgba(0,0,0,.65);
+      overflow:hidden;
+    }
+
+    /* =========================
+       LOGIN (CENTER + 1 CARD ONLY)
+       ========================= */
+    #loginPanel{display:block;}
+    .loginPage{
+      min-height: calc(100vh - 52px);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:22px 0 64px;
+    }
+    .loginCard{
+      width:min(520px, 92vw);
+      padding:26px 22px;
+      border-radius:20px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(8,6,12,.55);
+      box-shadow:0 28px 80px rgba(0,0,0,.65);
+      text-align:center;
+    }
+    .brandLogo{
+      display:block;
+      width:190px;
+      max-width:85%;
+      height:auto;
+      margin:0 auto 14px;
+      object-fit:contain;
+      filter: drop-shadow(0 14px 26px rgba(0,0,0,.55));
+    }
+    .loginTitle{
+      margin:0 0 10px;
+      font-size:16px;
+      font-weight:900;
+      letter-spacing:.18em;
+      text-transform:uppercase;
+    }
+    .loginDesc{
+      margin:0 0 18px;
+      color:var(--muted);
+      font-size:12.5px;
+      line-height:1.55;
+    }
+
+    .field{display:flex; flex-direction:column; gap:12px; margin-top:10px}
+    input{
+      width:100%;
+      padding:13px 14px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(12,10,18,.75);
+      color:var(--text);
+      outline:none;
+      font-size:14px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+    button{
+      width:100%;
+      padding:13px 14px;
+      border-radius:14px;
+      border:1px solid rgba(245,211,106,.45);
+      background:linear-gradient(180deg, rgba(245,211,106,.26), rgba(202,162,78,.14));
+      color:var(--text);
+      cursor:pointer;
+      font-weight:900;
+      letter-spacing:.14em;
+      text-transform:uppercase;
+      white-space:nowrap;
+      box-shadow:0 10px 28px rgba(0,0,0,.45);
+    }
+    button:disabled{opacity:.6; cursor:not-allowed}
+    button:active{transform:translateY(1px)}
+
+    .noId{
+      display:none;
+      margin-top:12px;
+      font-size:12.5px;
+      color:rgba(255,170,210,.92);
+      letter-spacing:.04em;
+    }
+
+    /* =========================
+       MEMBER AREA
+       ========================= */
+    .member{display:none; padding:18px;}
+    .card{
+      padding:16px; border-radius:16px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(8,6,12,.55);
+      position:relative; overflow:hidden;
+    }
+    .row{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap}
+    .tag{
+      padding:8px 10px; border-radius:999px;
+      border:1px solid rgba(245,211,106,.40);
+      background: rgba(245,211,106,.10);
+      color:var(--gold); font-weight:900; font-size:12px;
+      letter-spacing:.12em; text-transform:uppercase; white-space:nowrap;
+    }
+    .stats{display:flex; gap:10px; flex-wrap:wrap; margin-top:14px}
+    .stat{
+      flex:1 1 140px; padding:12px; border-radius:14px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(12,10,18,.55);
+    }
+    .stat small{display:block; color:rgba(246,242,255,.68); font-size:11px; letter-spacing:.12em; text-transform:uppercase;}
+    .stat strong{display:block; margin-top:6px; font-size:18px; letter-spacing:.04em;}
+
+    .sectionTitle{margin:14px 0 10px; display:flex; justify-content:space-between; align-items:center}
+    .sectionTitle h4{margin:0; font-size:13px; letter-spacing:.18em; text-transform:uppercase}
+    .sectionTitle span{font-size:12px; color:rgba(246,242,255,.55)}
+
+    .bonus{
+      border-radius:16px; overflow:hidden;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(10,8,14,.55);
+      margin-bottom:12px;
+    }
+    .bonus img{width:100%; display:block; aspect-ratio:380/109; object-fit:cover;}
+    .meta{padding:10px 12px; display:flex; align-items:center; justify-content:space-between}
+    .chip{
+      padding:8px 12px; border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.06);
+      font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+      font-weight:900; cursor:pointer;
+    }
+    .chip:hover{border-color:rgba(245,211,106,.35); background:rgba(245,211,106,.10); color:var(--gold)}
+
+    .toast{
+      position:fixed; left:50%; bottom:18px; transform:translateX(-50%);
+      padding:12px 14px; border-radius:14px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(10,8,14,.78);
+      backdrop-filter: blur(10px);
+      display:none; z-index:50;
+      max-width:min(560px,92vw);
+      box-shadow:0 20px 55px rgba(0,0,0,.55);
+    }
+    .toast b{color:var(--gold)}
+
+    /* Modal */
+    .modalBack{
+      position:fixed; inset:0;
+      background:rgba(0,0,0,.62);
+      display:none; align-items:center; justify-content:center;
+      padding:18px; z-index:1000;
+    }
+    .modalBack.show{display:flex;}
+
+    .modal{
+      width:min(540px,96vw); border-radius:18px;
+      border:1px solid rgba(255,255,255,.12);
+      background: radial-gradient(90% 120% at 50% 0%, rgba(245,211,106,.14), rgba(10,8,14,.88) 55%, rgba(10,8,14,.92));
+      overflow:hidden;
+      box-shadow:0 30px 90px rgba(0,0,0,.75);
+      max-height: calc(100vh - 32px); /* biar aman di HP */
+      display:flex;
+      flex-direction:column;
+    }
+    .modalHead{
+      padding:14px 16px; text-align:center; position:relative;
+      border-bottom:1px solid rgba(255,255,255,.08);
+      background: linear-gradient(180deg, rgba(245,211,106,.18), rgba(255,255,255,.02));
+      flex:0 0 auto;
+    }
+    .modalHead h3{margin:0; font-size:14px; letter-spacing:.10em; text-transform:uppercase;}
+    .xBtn{
+      position:absolute; right:10px; top:10px;
+      width:34px; height:34px; border-radius:12px;
+      border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.06);
+      color:rgba(246,242,255,.9); font-weight:900; cursor:pointer;
+    }
+
+    /* IMPORTANT: body scroll */
+    .modalBody{
+      padding:14px;
+      overflow:auto;
+      -webkit-overflow-scrolling: touch;
+      flex:1 1 auto;
+    }
+
+    .cardBox{border-radius:16px; border:1px solid rgba(255,255,255,.10); background:rgba(12,10,18,.55); padding:14px; margin:10px 0 12px;}
+    .titleLine{margin:0 0 10px; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:rgba(246,242,255,.92)}
+    ul{margin:0; padding-left:18px; color:rgba(246,242,255,.82); font-size:13px; line-height:1.7}
+    li{margin:6px 0}
+
+    .btnClose{
+      width:100%; padding:12px 14px; border-radius:14px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.06);
+      color:rgba(246,242,255,.90); font-weight:900; letter-spacing:.12em; text-transform:uppercase; cursor:pointer;
+    }
+    .btnPrimary{
+      width:100%; padding:12px 14px; border-radius:14px;
+      border:1px solid rgba(245,211,106,.45);
+      background:linear-gradient(180deg, rgba(245,211,106,.22), rgba(202,162,78,.12));
+      color:rgba(246,242,255,.95); font-weight:900; letter-spacing:.12em; text-transform:uppercase; cursor:pointer;
+    }
+
+    /* Redeem (center card) */
+    .redeemWrap{display:flex; justify-content:center; margin-top:6px;}
+    .redeemCard{
+      width:100%;
+      max-width:520px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(12,10,18,.55);
+      padding:14px;
+    }
+    .redeemRow{
+      display:flex; justify-content:space-between; gap:12px;
+      padding:10px 0;
+      border-top:1px solid rgba(255,255,255,.08);
+      align-items:center;
+    }
+    .redeemRow:first-of-type{border-top:0}
+    .redeemKey{
+      font-size:11px; letter-spacing:.14em; text-transform:uppercase;
+      color:rgba(246,242,255,.68);
+      min-width:120px;
+    }
+    .redeemVal{
+      font-weight:900;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+      color:rgba(246,242,255,.95);
+      text-align:right;
+    }
+    select{
+      width:100%;
+      padding:12px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(12,10,18,.70);
+      color:var(--text);
+      outline:none;
+      font-weight:800;
+      letter-spacing:.06em;
+    }
+    .subNote{margin-top:8px; font-size:12px; color:rgba(246,242,255,.65)}
+    .splitBtns{display:flex; gap:10px; margin-top:12px;}
+    .splitBtns button{width:100%;}
+
+    /* ===== FIX DROPDOWN KETIMPA ===== */
+    .modalBody{ position:relative; }
+    .redeemWrap,.redeemCard{ position:relative; z-index:20; }
+    .redeemRow{ position:relative; z-index:21; }
+    #redeemSelect{ position:relative; z-index:9999; }
+    .cardBox{ position:relative; z-index:1; }
+  </style>
+</head>
+
+<body>
+  <div class="bg"></div>
+
+  <div class="wrap">
+    <!-- LOGIN -->
+    <section id="loginPanel">
+      <div class="loginPage">
+        <div class="loginCard">
+          <img class="brandLogo" alt="Logo Brand"
+            src="https://api2-crb.imgnxb.com/images/POd13iqh6aE/logo_96c00afb-2339-4071-aabc-5685e6905423_1769687439343.gif">
+
+          <h2 class="loginTitle">MEMBER LOGIN</h2>
+          <p class="loginDesc">Masukkan <b>ID/Username</b> member untuk masuk.</p>
+
+          <div class="field">
+            <input id="idInput" placeholder="USERNAME / ID" autocomplete="off"/>
+            <button id="btnLogin">MASUK</button>
+          </div>
+
+          <div class="noId" id="noIdText">ID tidak tersedia</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MEMBER -->
+    <section class="panel member" id="memberArea">
+      <div class="card">
+        <div class="row">
+          <div>
+            <div style="font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:rgba(246,242,255,.72)">Member Card</div>
+            <div style="margin-top:6px;font-size:18px;letter-spacing:.06em;font-weight:800" id="memberName">—</div>
+          </div>
+          <div class="tag" id="memberIdTag">ID: —</div>
+        </div>
+
+        <div class="stats">
+          <div class="stat"><small>Poin Saat Ini</small><strong id="poinNow">0</strong></div>
+          <div class="stat"><small>Status</small><strong id="memberStatus">—</strong></div>
+          <div class="stat"><small>Tier</small><strong id="memberTier">—</strong></div>
+        </div>
+      </div>
+
+      <div class="sectionTitle">
+        <h4>Bonus Eksklusif</h4>
+        <span>Klik DETAIL</span>
+      </div>
+
+      <!-- BONUS LIST (ONLY 2) -->
+      <article class="bonus" data-title="BONUS POINT VIP & VVIP" data-key="CREDIT" data-mode="credit">
+        <img src="https://api2-crb.imgnxb.com/images/POd13iqh6aE/id_promo_f4e59410-b265-4a14-9404-2d37144fc16b_1769235640297.jpg" alt="CREDIT">
+        <div class="meta"><b>CREDIT</b><span class="chip" data-action="detail">DETAIL</span></div>
+      </article>
+
+      <article class="bonus" data-title="🎰 LUCKY SPIN" data-key="LUCKY SPIN" data-mode="lucky">
+        <img src="https://api2-crb.imgnxb.com/images/POd13iqh6aE/id_promo_ff014578-e41d-49ba-9de5-6688e6b845a6_1769234942053.jpg" alt="LUCKY SPIN">
+        <div class="meta"><b>LUCKY SPIN</b><span class="chip" data-action="detail">DETAIL</span></div>
+      </article>
+    </section>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <!-- MODAL -->
+  <div class="modalBack" id="modalBack">
+    <div class="modal">
+      <div class="modalHead">
+        <h3 id="modalTitle">BONUS</h3>
+        <button class="xBtn" id="btnX">×</button>
+      </div>
+
+      <div class="modalBody">
+        <div class="cardBox">
+          <div class="titleLine">📌 SYARAT &amp; KETENTUAN</div>
+          <ul id="termList"></ul>
+        </div>
+
+        <div class="cardBox">
+          <div class="titleLine">📊 PERHITUNGAN</div>
+          <div id="calcBox" style="font-size:13px;line-height:1.7;color:rgba(246,242,255,.85)"></div>
+        </div>
+
+        <!-- DATA PENUKARAN -->
+        <div class="redeemWrap">
+          <div class="redeemCard" id="redeemCard">
+            <div class="titleLine" style="text-align:center">🧾 DATA PENUKARAN</div>
+
+            <div class="redeemRow">
+              <div class="redeemKey">USERNAME</div>
+              <div class="redeemVal" id="rUser">-</div>
+            </div>
+
+            <div class="redeemRow">
+              <div class="redeemKey">POIN</div>
+              <div class="redeemVal"><span id="rPoin">0</span></div>
+            </div>
+
+            <div class="redeemRow" style="align-items:flex-start">
+              <div class="redeemKey" style="padding-top:10px" id="redeemLabel">PENUKARAN</div>
+              <div style="flex:1">
+                <select id="redeemSelect"></select>
+                <div class="subNote" id="redeemHint">Pilih poin yang mau ditukar (kelipatan 50).</div>
+              </div>
+            </div>
+
+            <div class="splitBtns">
+              <button class="btnClose" id="btnCopyCard" type="button">SALIN</button>
+              <button class="btnPrimary" id="btnClaim" type="button">CLAIM</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="cardBox" style="margin-top:12px">
+          <div class="titleLine">⚠️ PERHATIAN</div>
+          <div style="font-size:13px;line-height:1.6;color:rgba(246,242,255,.82);margin-bottom:10px">
+            CERIABET berhak membatalkan bonus atau menutup akun apabila ditemukan indikasi:
+          </div>
+          <ul id="warnList"></ul>
+        </div>
+
+        <div style="margin-top:10px">
+          <button class="btnClose" id="btnClose" type="button">TUTUP</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // =============================
+    // CONFIG
+    // =============================
+    const API_URL = "https://script.google.com/macros/s/AKfycbxHTVri7knpxXtBfFGL1yHDHPwZkaVa5xBpqsZIJ0UuW6tCA_vG1rXDtPzzWPo6gKwFfQ/exec";
+    const WA_LINK  = "https://access.vpnceria.life/whatsappviip";
+
+    // =============================
+    // UI helpers
+    // =============================
+    const el = (id)=>document.getElementById(id);
+    const toast = el("toast");
+    function showToast(html){
+      toast.innerHTML = html;
+      toast.style.display = "block";
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(()=>toast.style.display="none", 2400);
+    }
+
+    // =============================
+    // JSONP (ANTI CORS)
+    // =============================
+    function jsonpCall(params){
+      return new Promise((resolve, reject)=>{
+        const cb = "cb_" + Math.random().toString(16).slice(2);
+        const url = new URL(API_URL);
+        Object.entries(params).forEach(([k,v])=>url.searchParams.set(k, String(v)));
+        url.searchParams.set("callback", cb);
+
+        const s = document.createElement("script");
+        const t = setTimeout(()=>{ cleanup(); reject(new Error("timeout")); }, 15000);
+
+        function cleanup(){
+          clearTimeout(t);
+          delete window[cb];
+          if(s.parentNode) s.parentNode.removeChild(s);
+        }
+
+        window[cb] = (data)=>{ cleanup(); resolve(data); };
+        s.onerror = ()=>{ cleanup(); reject(new Error("load_error")); };
+        s.src = url.toString();
+        document.body.appendChild(s);
+      });
+    }
+
+    async function apiGetMember(id){ return await jsonpCall({ action:"getMember", id }); }
+    async function apiClaim(id, bonus, amount){ return await jsonpCall({ action:"claim", id, bonus, amount }); }
+
+    // =============================
+    // State
+    // =============================
+    let currentMember = null;
+    let currentBonus  = null;
+
+    function renderMember(m){
+      currentMember = m;
+      el("memberName").textContent = m.name || "-";
+      el("memberIdTag").textContent = "ID: " + (m.id || "-");
+      el("poinNow").textContent = String(m.poin ?? 0);
+      el("memberStatus").textContent = m.status || "-";
+      el("memberTier").textContent = m.tier || "-";
+    }
+
+    function showMemberUI(){
+      el("loginPanel").style.display = "none";
+      el("memberArea").style.display = "block";
+    }
+
+    // =============================
+    // LOGIN
+    // =============================
+    const btnLogin = el("btnLogin");
+    btnLogin.addEventListener("click", async ()=>{
+      const raw = (el("idInput").value || "");
+      const id = raw.replace(/\s+/g,"").trim().toUpperCase();
+      el("noIdText").style.display = "none";
+
+      if(!id){ showToast("Masukkan ID/Username dulu"); return; }
+
+      btnLogin.disabled = true;
+      showToast("⏳ Cek ID...");
+
+      try{
+        const out = await apiGetMember(id);
+        if(!out || !out.ok){
+          el("noIdText").style.display = "block";
+          showToast("❌ ID tidak ditemukan");
+          return;
+        }
+        renderMember(out.member);
+        showMemberUI();
+        showToast(`✅ Login sukses: <b>${out.member.name || out.member.id}</b>`);
+      }catch(err){
+        console.error(err);
+        showToast("❌ Gagal konek API (cek deploy/access)");
+      }finally{
+        btnLogin.disabled = false;
+      }
+    });
+    el("idInput").addEventListener("keydown",(e)=>{ if(e.key==="Enter") btnLogin.click(); });
+
+    // =============================
+    // MODAL CONTENT
+    // =============================
+    const CREDIT_TERMS = [
+      "Berlaku hanya untuk Member VIP & VVIP",
+      "Data member wajib valid & sesuai",
+      "Maximal klaim per hari: 500 Poin",
+      "Claim Berlaku Kelipatan 50 Poin"
+    ];
+    const LUCKY_TERMS = [
+      "Berlaku khusus untuk Member VIP & VVIP",
+      "Data member wajib valid dan sesuai",
+      "Klaim maksimal 1 kali per hari",
+      "Minimal klaim 1 tiket per hari",
+      "Maksimal klaim 5 tiket per hari"
+    ];
+    const WARNS = [
+      "Kecurangan",
+      "Kesamaan data player",
+      "Penipuan",
+      "Kesamaan alamat IP",
+      "Tindakan mencurigakan lainnya"
+    ];
+
+    function fillList(id, items){
+      const ul = el(id);
+      ul.innerHTML = "";
+      items.forEach(t=>{
+        const li = document.createElement("li");
+        li.textContent = t;
+        ul.appendChild(li);
+      });
+    }
+    function setCalcHTML(html){ el("calcBox").innerHTML = html; }
+
+    // CREDIT: options 50..500
+    function buildCreditOptions(memberPoin){
+      const sel = el("redeemSelect");
+      sel.innerHTML = "";
+      const options = [50,100,150,200,250,300,350,400,450,500];
+      let hasAny = false;
+
+      options.forEach(v=>{
+        const opt = document.createElement("option");
+        opt.value = String(v);
+        opt.textContent = `${v} Poin`;
+        if(v > memberPoin) opt.disabled = true;
+        else hasAny = true;
+        sel.appendChild(opt);
+      });
+
+      if(!hasAny){
+        sel.innerHTML = `<option value="">Poin tidak cukup (min 50)</option>`;
+        sel.disabled = true;
+      }else{
+        sel.disabled = false;
+        let best = 50;
+        options.forEach(v=>{ if(v <= memberPoin) best = v; });
+        sel.value = String(best);
+      }
+    }
+
+    // LUCKY: options 1..5 tiket (convert to poin)
+    function buildLuckyTicketOptions(memberPoin){
+      const sel = el("redeemSelect");
+      sel.innerHTML = "";
+      let hasAny = false;
+
+      for(let t=1; t<=5; t++){
+        const need = 25 * t;
+        const opt = document.createElement("option");
+        opt.value = String(t);               // VALUE = tiket
+        opt.textContent = `${t} Tiket`;
+        if(need > memberPoin) opt.disabled = true;
+        else hasAny = true;
+        sel.appendChild(opt);
+      }
+
+      if(!hasAny){
+        sel.innerHTML = `<option value="">Poin tidak cukup</option>`;
+        sel.disabled = true;
+      }else{
+        sel.disabled = false;
+        // pilih tiket terbesar yang cukup
+        let best = 1;
+        for(let t=1; t<=5; t++){
+          if(25*t <= memberPoin) best = t;
+        }
+        sel.value = String(best);
+      }
+    }
+
+    function buildClaimText({id, poinNow, bonusName, amountPoints, tickets, after}){
+      let extra = "";
+      if(typeof tickets === "number"){
+        extra = `TIKET: ${tickets}\n`;
+      }
+      return (
+        `CLAIM BONUS POINT\n`+
+        `USERNAME: ${id}\n`+
+        `POIN: ${poinNow}\n`+
+        `BONUS: ${bonusName}\n`+
+        extra+
+        `PENUKARAN: ${amountPoints} Poin\n`+
+        (typeof after === "number" ? `SISA: ${after} Poin\n` : ``)
+      );
+    }
+
+    function refreshRedeemHint(){
+      if(!currentMember || !currentBonus) return;
+      const poin = Number(currentMember.poin ?? 0);
+      const hint = el("redeemHint");
+
+      if(currentBonus.mode === "lucky"){
+        const tiket = Number(el("redeemSelect").value || 0);
+        if(!tiket){ hint.textContent = "Poin tidak cukup untuk Lucky Spin."; return; }
+        const need = 25 * tiket;
+        hint.textContent = `Pilihan: ${tiket} Tiket = ${need} Poin`;
+      }else{
+        const v = Number(el("redeemSelect").value || 0);
+        if(!v){ hint.textContent = "Poin tidak cukup (min 50)."; return; }
+        hint.textContent = "Pilih poin yang mau ditukar (kelipatan 50).";
+      }
+    }
+
+    function openModal(bonus){
+      if(!currentMember){ showToast("Login dulu bro"); return; }
+
+      currentBonus = bonus;
+      el("modalTitle").textContent = bonus.title;
+
+      fillList("warnList", WARNS);
+
+      const id = currentMember.id || "-";
+      const poin = Number(currentMember.poin ?? 0);
+      el("rUser").textContent = id;
+      el("rPoin").textContent = String(poin);
+
+      // mode switch UI label
+      if(bonus.mode === "lucky"){
+        el("redeemLabel").textContent = "TIKET";
+        fillList("termList", LUCKY_TERMS);
+
+        setCalcHTML(
+          `TO <b style="color:var(--gold)">Rp2.000.000</b> = <b style="color:var(--gold)">1 Point</b><br/>` +
+          `<b style="color:var(--gold)">25 Point</b> = <b style="color:var(--gold)">1 Tiket Lucky Spin</b>`
+        );
+
+        buildLuckyTicketOptions(poin);
+        el("redeemSelect").onchange = refreshRedeemHint;
+        refreshRedeemHint();
+
+      }else{
+        el("redeemLabel").textContent = "PENUKARAN";
+        fillList("termList", CREDIT_TERMS);
+
+        setCalcHTML(
+          `TO <b style="color:var(--gold)">Rp2.000.000</b> = <b style="color:var(--gold)">1 Point</b><br/>` +
+          `<b style="color:var(--gold)">50 Point</b> = <b style="color:var(--gold)">50rb</b>`
+        );
+
+        buildCreditOptions(poin);
+        el("redeemSelect").onchange = refreshRedeemHint;
+        refreshRedeemHint();
+      }
+
+      el("modalBack").classList.add("show");
+    }
+
+    function closeModal(){
+      el("modalBack").classList.remove("show");
+      currentBonus = null;
+    }
+
+    el("btnClose").addEventListener("click", closeModal);
+    el("btnX").addEventListener("click", closeModal);
+    el("modalBack").addEventListener("click",(e)=>{ if(e.target===el("modalBack")) closeModal(); });
+    document.addEventListener("keydown",(e)=>{ if(e.key==="Escape") closeModal(); });
+
+    document.querySelectorAll('[data-action="detail"]').forEach(btn=>{
+      btn.addEventListener("click",(e)=>{
+        const card = e.target.closest(".bonus");
+        openModal({
+          title: card.getAttribute("data-title") || "BONUS",
+          key: card.getAttribute("data-key") || "BONUS",
+          mode: card.getAttribute("data-mode") || "credit"
+        });
+      });
+    });
+
+    // copy helper
+    async function copyText(text){
+      try{ await navigator.clipboard.writeText(text); return true; }
+      catch{ return false; }
+    }
+
+    // SALIN (copy only)
+    el("btnCopyCard").addEventListener("click", async ()=>{
+      if(!currentMember){ showToast("Login dulu bro"); return; }
+      if(!currentBonus){ showToast("Bonus belum dipilih"); return; }
+
+      const id = currentMember.id;
+      const poinNow = Number(currentMember.poin ?? 0);
+
+      let amountPoints = 0;
+      let tickets = undefined;
+
+      if(currentBonus.mode === "lucky"){
+        tickets = Number(el("redeemSelect").value || 0);
+        if(!tickets){ showToast("Poin tidak cukup untuk Lucky Spin"); return; }
+        amountPoints = 25 * tickets;
+      }else{
+        amountPoints = Number(el("redeemSelect").value || 0);
+        if(!amountPoints){ showToast("Poin tidak cukup (min 50)"); return; }
+      }
+
+      if(amountPoints > poinNow){ showToast("Poin kamu tidak cukup"); return; }
+
+      const text = buildClaimText({ id, poinNow, bonusName: currentBonus.title, amountPoints, tickets });
+      const ok = await copyText(text);
+      showToast(ok ? "✅ Tersalin. Tinggal tempel & claim" : "❌ Gagal salin (izin clipboard)");
+    });
+
+    // CLAIM (API + auto copy + open WA)
+    const btnClaim = el("btnClaim");
+    btnClaim.addEventListener("click", async ()=>{
+      if(!currentMember){ showToast("Login dulu"); return; }
+      if(!currentBonus){ showToast("Bonus belum dipilih"); return; }
+
+      const id = currentMember.id;
+      const bonusName = currentBonus.title;
+      const poinNow = Number(currentMember.poin ?? 0);
+
+      let amountPoints = 0;
+      let tickets = undefined;
+
+      if(currentBonus.mode === "lucky"){
+        tickets = Number(el("redeemSelect").value || 0);
+        if(!tickets){ showToast("Poin tidak cukup untuk Lucky Spin"); return; }
+        amountPoints = 25 * tickets;
+      }else{
+        amountPoints = Number(el("redeemSelect").value || 0);
+        if(!amountPoints){ showToast("Poin tidak cukup (min 50)"); return; }
+      }
+
+      if(amountPoints > poinNow){ showToast("Poin kamu tidak cukup"); return; }
+
+      btnClaim.disabled = true;
+      showToast("⏳ Proses claim...");
+
+      try{
+        const out = await apiClaim(id, bonusName, amountPoints);
+
+        if(!out || !out.ok){
+          showToast(`❌ Claim gagal: <b>${out?.error || "unknown"}</b>`);
+          return;
+        }
+
+        // update UI
+        currentMember.poin = out.result.after;
+        el("poinNow").textContent = String(out.result.after);
+        el("rPoin").textContent = String(out.result.after);
+
+        const claimText = buildClaimText({
+          id, poinNow, bonusName, amountPoints, tickets,
+          after: Number(out.result.after || 0)
+        });
+
+        await copyText(claimText);
+
+        // rebuild options after deduct
+        const afterPoin = Number(out.result.after || 0);
+        if(currentBonus.mode === "lucky") buildLuckyTicketOptions(afterPoin);
+        else buildCreditOptions(afterPoin);
+        refreshRedeemHint();
+
+        window.open(WA_LINK, "_blank", "noopener,noreferrer");
+        showToast(`✅ Claim sukses • Sisa poin <b>${out.result.after}</b>`);
+        closeModal();
+      }catch(err){
+        console.error(err);
+        showToast("❌ Error claim (cek API)");
+      }finally{
+        btnClaim.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
