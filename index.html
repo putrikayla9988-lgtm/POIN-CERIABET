@@ -24,16 +24,18 @@
         linear-gradient(180deg, #05040a, #07060a 40%, #06050a);
     }
     .bg::before{
-      content:""; position:absolute; inset:0;
-      background:url("https://plcl.me/images/QfXku.jpg") center/cover no-repeat;
-      opacity:.18; filter:saturate(.9) contrast(1.05);
-    }
+		content:""; position:absolute; inset:0;
+		background:url("https://plcl.me/images/QfXku.jpg") center/cover no-repeat;
+		opacity:1;
+		filter:none;
+	}
+
 
     .wrap{width:min(980px, 92vw); margin:0 auto; padding:26px 0 64px;}
     .panel{
-      border:1px solid rgba(255,255,255,.10);
-      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-      backdrop-filter: blur(10px);
+      border:1px solid rgba(255,255,255,.08);
+      background:linear-gradient(180deg, rgba(0,0,0,.65), rgba(0,0,0,.65));
+      backdrop-filter:none;
       border-radius: var(--radius);
       box-shadow: 0 24px 70px rgba(0,0,0,.65);
       overflow:hidden;
@@ -173,7 +175,7 @@
       padding:12px 14px; border-radius:14px;
       border:1px solid rgba(255,255,255,.14);
       background: rgba(10,8,14,.78);
-      backdrop-filter: blur(10px);
+      backdrop-filter:none;
       display:none; z-index:50;
       max-width:min(560px,92vw);
       box-shadow:0 20px 55px rgba(0,0,0,.55);
@@ -808,4 +810,3 @@
   </script>
 </body>
 </html>
-
