@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <meta name="color-scheme" content="dark"/>
   <title>CERIABET • Member Site</title>
   <style>
     :root{
@@ -10,7 +11,9 @@
       --gold:#f5d36a; --gold2:#caa24e;
       --text:#f6f2ff; --muted:rgba(246,242,255,.72);
       --radius:18px;
+      color-scheme: dark;
     }
+    html{ color-scheme: dark; }
     *{box-sizing:border-box}
     body{
       margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;
@@ -40,9 +43,7 @@
       overflow:hidden;
     }
 
-    /* =========================
-       LOGIN (CENTER + 1 CARD ONLY)
-       ========================= */
+    /* LOGIN */
     #loginPanel{display:block;}
     .loginPage{
       min-height: calc(100vh - 52px);
@@ -61,13 +62,11 @@
       text-align:center;
     }
 
-    /* =========================
-       ✅ LOGO LOCK (ANTI HILANG)
-       ========================= */
+    /* ✅ LOGO LOCK */
     .brandWrap{
       width:190px;
       max-width:85%;
-      min-height:76px;              /* penting: cegah blank */
+      min-height:76px;
       margin:0 auto 14px;
       display:flex;
       align-items:center;
@@ -80,8 +79,6 @@
       height:auto;
       object-fit:contain;
       filter: drop-shadow(0 14px 26px rgba(0,0,0,.55));
-
-      /* anti drag / anti klik */
       -webkit-user-drag:none;
       user-select:none;
       pointer-events:none;
@@ -150,9 +147,7 @@
       letter-spacing:.04em;
     }
 
-    /* =========================
-       MEMBER AREA
-       ========================= */
+    /* MEMBER AREA */
     .member{display:none; padding:18px;}
     .card{
       padding:16px; border-radius:16px;
@@ -248,6 +243,7 @@
       overflow:auto;
       -webkit-overflow-scrolling: touch;
       flex:1 1 auto;
+      position:relative;
     }
 
     .cardBox{border-radius:16px; border:1px solid rgba(255,255,255,.10); background:rgba(12,10,18,.55); padding:14px; margin:10px 0 12px;}
@@ -268,7 +264,7 @@
       color:rgba(246,242,255,.95); font-weight:900; letter-spacing:.12em; text-transform:uppercase; cursor:pointer;
     }
 
-    .redeemWrap{display:flex; justify-content:center; margin-top:6px;}
+    .redeemWrap{display:flex; justify-content:center; margin-top:6px; position:relative; z-index:20;}
     .redeemCard{
       width:100%;
       max-width:520px;
@@ -276,12 +272,16 @@
       border:1px solid rgba(255,255,255,.10);
       background:rgba(12,10,18,.55);
       padding:14px;
+      position:relative;
+      z-index:20;
     }
     .redeemRow{
       display:flex; justify-content:space-between; gap:12px;
       padding:10px 0;
       border-top:1px solid rgba(255,255,255,.08);
       align-items:center;
+      position:relative;
+      z-index:21;
     }
     .redeemRow:first-of-type{border-top:0}
     .redeemKey{
@@ -296,27 +296,116 @@
       color:rgba(246,242,255,.95);
       text-align:right;
     }
-    select{
+
+    /* =========================
+       ✅ PREMIUM DROPDOWN (CUSTOM)
+       ========================= */
+    .nativeSelect{
+      position:absolute !important;
+      left:-9999px !important;
+      width:1px !important;
+      height:1px !important;
+      opacity:0 !important;
+      pointer-events:none !important;
+    }
+    .dd{position:relative; width:100%}
+    .ddBtn{
       width:100%;
-      padding:12px;
+      display:flex; align-items:center; justify-content:space-between;
+      gap:12px;
+      padding:12px 14px;
       border-radius:14px;
+      border:1px solid rgba(255,255,255,.16);
+      background:
+        radial-gradient(120% 160% at 50% 0%, rgba(245,211,106,.12), transparent 55%),
+        linear-gradient(180deg, rgba(12,10,18,.92), rgba(12,10,18,.70));
+      color:var(--text);
+      font-weight:900;
+      letter-spacing:.06em;
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,.35), 0 12px 28px rgba(0,0,0,.35);
+      cursor:pointer;
+      text-transform:uppercase;
+    }
+    .ddBtn:focus{
+      outline:none;
+      border-color: rgba(245,211,106,.55);
+      box-shadow:
+        0 0 0 3px rgba(245,211,106,.14),
+        inset 0 0 0 1px rgba(0,0,0,.35),
+        0 12px 28px rgba(0,0,0,.35);
+    }
+    .ddVal{white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+    .ddArrow{
+      width:10px;height:10px; flex:0 0 10px;
+      border-right:2px solid rgba(246,242,255,.80);
+      border-bottom:2px solid rgba(246,242,255,.80);
+      transform:rotate(45deg);
+      filter: drop-shadow(0 2px 6px rgba(0,0,0,.6));
+    }
+    .ddMenu{
+      position:absolute;
+      left:0; right:0;
+      top:calc(100% + 10px);
+      border-radius:16px;
       border:1px solid rgba(255,255,255,.14);
+      background:
+        radial-gradient(120% 120% at 50% 0%, rgba(245,211,106,.10), transparent 55%),
+        linear-gradient(180deg, rgba(10,8,14,.96), rgba(10,8,14,.88));
+      box-shadow:0 22px 70px rgba(0,0,0,.62);
+      overflow:hidden;
+      display:none;
+      z-index:999999;
+    }
+    .dd.open .ddMenu{display:block}
+
+    .ddSearch{padding:10px 12px; border-bottom:1px solid rgba(255,255,255,.08);}
+    .ddSearch input{
+      width:100%;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,.12);
       background:rgba(12,10,18,.70);
       color:var(--text);
       outline:none;
-      font-weight:800;
-      letter-spacing:.06em;
+      font-size:12px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
     }
+    .ddList{max-height:260px; overflow:auto; -webkit-overflow-scrolling:touch}
+    .ddItem{
+      padding:12px 12px;
+      display:flex; align-items:center; justify-content:space-between;
+      gap:10px;
+      font-weight:900;
+      letter-spacing:.06em;
+      text-transform:uppercase;
+      cursor:pointer;
+      color:rgba(246,242,255,.90);
+    }
+    .ddItem:hover{background:rgba(245,211,106,.10); color:var(--gold);}
+    .ddItem.active{
+      background:linear-gradient(180deg, rgba(245,211,106,.16), rgba(245,211,106,.06));
+      color:var(--gold);
+    }
+    .ddItem.disabled{opacity:.35; cursor:not-allowed;}
+    .ddBadge{
+      font-size:11px;
+      padding:6px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);
+      color:rgba(246,242,255,.85);
+      white-space:nowrap;
+    }
+    .ddItem.active .ddBadge{
+      border-color:rgba(245,211,106,.35);
+      background:rgba(245,211,106,.12);
+      color:var(--gold);
+    }
+
     .subNote{margin-top:8px; font-size:12px; color:rgba(246,242,255,.65)}
     .splitBtns{display:flex; gap:10px; margin-top:12px;}
     .splitBtns button{width:100%;}
-
-    /* FIX DROPDOWN KETIMPA */
-    .modalBody{ position:relative; }
-    .redeemWrap,.redeemCard{ position:relative; z-index:20; }
-    .redeemRow{ position:relative; z-index:21; }
-    #redeemSelect{ position:relative; z-index:9999; }
-    .cardBox{ position:relative; z-index:1; }
   </style>
 </head>
 
@@ -328,18 +417,10 @@
     <section id="loginPanel">
       <div class="loginPage">
         <div class="loginCard">
-
-          <!-- ✅ LOGO LOCK (WRAP + FALLBACK) -->
           <div class="brandWrap">
-            <img
-              class="brandLogo"
-              id="loginLogo"
-              alt="CERIABET"
+            <img class="brandLogo" id="loginLogo" alt="CERIABET"
               src="https://api2-crb.imgnxb.com/images/POd13iqh6aE/logo_mobile_96c00afb-2339-4071-aabc-5685e6905423_1770661776940.gif"
-              loading="eager"
-              decoding="async"
-              draggable="false"
-            >
+              loading="eager" decoding="async" draggable="false">
             <div class="brandTextFallback" id="loginLogoText">CERIABET</div>
           </div>
 
@@ -384,8 +465,7 @@
         <img src="http://plcl.me/images/HiCFo.png" alt="CREDIT">
         <div class="meta"><b>CREDIT</b><span class="chip" data-action="detail">DETAIL</span></div>
       </article>
-
-      <!-- ✅ LUCKY SPIN DIHILANGKAN DARI BANNER -->
+      <!-- ✅ LUCKY SPIN DIHILANGKAN -->
     </section>
   </div>
 
@@ -428,7 +508,18 @@
             <div class="redeemRow" style="align-items:flex-start">
               <div class="redeemKey" style="padding-top:10px" id="redeemLabel">PENUKARAN</div>
               <div style="flex:1">
-                <select id="redeemSelect"></select>
+
+                <!-- ✅ SELECT ASLI (HIDDEN) + CUSTOM DROPDOWN -->
+                <select id="redeemSelect" class="nativeSelect"></select>
+
+                <div class="dd" id="redeemDD" aria-label="Penukaran poin">
+                  <button type="button" class="ddBtn" id="redeemDD_btn">
+                    <span class="ddVal" id="redeemDD_val">Pilih Poin</span>
+                    <span class="ddArrow" aria-hidden="true"></span>
+                  </button>
+                  <div class="ddMenu" id="redeemDD_menu"></div>
+                </div>
+
                 <div class="subNote" id="redeemHint">Pilih poin yang mau ditukar (kelipatan 50).</div>
               </div>
             </div>
@@ -456,27 +547,18 @@
   </div>
 
   <script>
-    // =============================
-    // ✅ LOGIN LOGO ALWAYS ON (LOCK)
-    // =============================
+    // ✅ LOGO LOCK
     (function lockLoginLogo(){
       const img  = document.getElementById("loginLogo");
       const text = document.getElementById("loginLogoText");
       if(!img) return;
 
       const PRIMARY  = img.src;
-      const FALLBACK = "https://plcl.me/images/HiCFo.png"; // cadangan stabil
-
+      const FALLBACK = "https://plcl.me/images/HiCFo.png";
       let triedFallback = false;
 
-      function showText(){
-        img.style.display = "none";
-        text.style.display = "flex";
-      }
-      function showImg(){
-        img.style.display = "block";
-        text.style.display = "none";
-      }
+      function showText(){ img.style.display="none"; text.style.display="flex"; }
+      function showImg(){ img.style.display="block"; text.style.display="none"; }
 
       img.addEventListener("error", ()=>{
         if(!triedFallback){
@@ -486,10 +568,8 @@
           showText();
         }
       });
-
       img.addEventListener("load", showImg);
 
-      // paksa reload sekali kalau cache/slow
       setTimeout(()=>{
         if(!img.complete || img.naturalWidth === 0){
           img.src = PRIMARY + "?v=" + Date.now();
@@ -497,13 +577,10 @@
       }, 800);
     })();
 
-    // =============================
     // CONFIG
-    // =============================
     const API_URL = "https://script.google.com/macros/s/AKfycbxHTVri7knpxXtBfFGL1yHDHPwZkaVa5xBpqsZIJ0UuW6tCA_vG1rXDtPzzWPo6gKwFfQ/exec";
     const WA_LINK  = "https://access.vpnceria.life/whatsappviip";
 
-    // UI helpers
     const el = (id)=>document.getElementById(id);
     const toast = el("toast");
     function showToast(html){
@@ -513,7 +590,7 @@
       showToast._t = setTimeout(()=>toast.style.display="none", 2400);
     }
 
-    // JSONP (ANTI CORS)
+    // JSONP
     function jsonpCall(params){
       return new Promise((resolve, reject)=>{
         const cb = "cb_" + Math.random().toString(16).slice(2);
@@ -552,11 +629,102 @@
       el("memberStatus").textContent = m.status || "-";
       el("memberTier").textContent = m.tier || "-";
     }
-
     function showMemberUI(){
       el("loginPanel").style.display = "none";
       el("memberArea").style.display = "block";
     }
+
+    // =============================
+    // ✅ PREMIUM DROPDOWN (SYNC KE SELECT)
+    // =============================
+    function setupPremiumDropdown(selectId, ddId){
+      const sel  = document.getElementById(selectId);
+      const dd   = document.getElementById(ddId);
+      const btn  = document.getElementById(ddId + "_btn");
+      const val  = document.getElementById(ddId + "_val");
+      const menu = document.getElementById(ddId + "_menu");
+      if(!sel || !dd || !btn || !val || !menu) return;
+
+      menu.innerHTML = `
+        <div class="ddSearch">
+          <input type="text" id="${ddId}_q" placeholder="Cari (misal: 200)" autocomplete="off">
+        </div>
+        <div class="ddList" id="${ddId}_list"></div>
+      `;
+      const q = document.getElementById(ddId + "_q");
+      const list = document.getElementById(ddId + "_list");
+
+      function currentText(){
+        const opt = sel.options[sel.selectedIndex];
+        return opt ? opt.textContent : "Pilih Poin";
+      }
+
+      function renderList(){
+        const keyword = (q.value || "").trim().toLowerCase();
+        list.innerHTML = "";
+
+        const opts = Array.from(sel.options);
+        opts.forEach((o)=>{
+          const text = (o.textContent || "").trim();
+          if(keyword && !text.toLowerCase().includes(keyword)) return;
+
+          const item = document.createElement("div");
+          item.className = "ddItem" +
+            (o.disabled ? " disabled" : "") +
+            (o.selected ? " active" : "");
+
+          item.innerHTML = `
+            <div>${text}</div>
+            <div class="ddBadge">${o.disabled ? "TIDAK CUKUP" : "OK"}</div>
+          `;
+
+          item.addEventListener("click", ()=>{
+            if(o.disabled) return;
+            sel.value = o.value;
+            sel.dispatchEvent(new Event("change", { bubbles:true }));
+            val.textContent = currentText();
+            closeDD();
+          });
+
+          list.appendChild(item);
+        });
+
+        if(!list.children.length){
+          const empty = document.createElement("div");
+          empty.className = "ddItem disabled";
+          empty.textContent = "Tidak ada pilihan";
+          list.appendChild(empty);
+        }
+      }
+
+      function openDD(){
+        dd.classList.add("open");
+        q.value = "";
+        renderList();
+        setTimeout(()=>q.focus(), 0);
+      }
+      function closeDD(){ dd.classList.remove("open"); }
+      function toggleDD(){ dd.classList.contains("open") ? closeDD() : openDD(); }
+
+      btn.addEventListener("click", (e)=>{ e.preventDefault(); toggleDD(); });
+      q.addEventListener("input", renderList);
+
+      document.addEventListener("click", (e)=>{
+        if(!dd.contains(e.target)) closeDD();
+      });
+
+      sel.addEventListener("change", ()=>{
+        val.textContent = currentText();
+        if(dd.classList.contains("open")) renderList();
+      });
+
+      // init
+      val.textContent = currentText();
+    }
+
+    document.addEventListener("DOMContentLoaded", ()=>{
+      setupPremiumDropdown("redeemSelect", "redeemDD");
+    });
 
     // LOGIN
     const btnLogin = el("btnLogin");
@@ -639,6 +807,9 @@
         options.forEach(v=>{ if(v <= memberPoin) best = v; });
         sel.value = String(best);
       }
+
+      // ✅ sync dropdown premium
+      sel.dispatchEvent(new Event("change", { bubbles:true }));
     }
 
     function buildClaimText({id, poinNow, bonusName, amountPoints, after}){
