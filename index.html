@@ -24,12 +24,11 @@
         linear-gradient(180deg, #05040a, #07060a 40%, #06050a);
     }
     .bg::before{
-		content:""; position:absolute; inset:0;
-		background:url("https://plcl.me/images/QfXku.jpg") center/cover no-repeat;
-		opacity:1;
-		filter:none;
-	}
-
+      content:""; position:absolute; inset:0;
+      background:url("https://plcl.me/images/QfXku.jpg") center/cover no-repeat;
+      opacity:1;
+      filter:none;
+    }
 
     .wrap{width:min(980px, 92vw); margin:0 auto; padding:26px 0 64px;}
     .panel{
@@ -61,15 +60,44 @@
       box-shadow:0 28px 80px rgba(0,0,0,.65);
       text-align:center;
     }
-    .brandLogo{
-      display:block;
+
+    /* =========================
+       ✅ LOGO LOCK (ANTI HILANG)
+       ========================= */
+    .brandWrap{
       width:190px;
       max-width:85%;
-      height:auto;
+      min-height:76px;              /* penting: cegah blank */
       margin:0 auto 14px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      position:relative;
+    }
+    .brandLogo{
+      display:block;
+      width:100%;
+      height:auto;
       object-fit:contain;
       filter: drop-shadow(0 14px 26px rgba(0,0,0,.55));
+
+      /* anti drag / anti klik */
+      -webkit-user-drag:none;
+      user-select:none;
+      pointer-events:none;
     }
+    .brandTextFallback{
+      position:absolute;
+      inset:0;
+      display:none;
+      align-items:center;
+      justify-content:center;
+      font-weight:1000;
+      letter-spacing:.22em;
+      color:rgba(245,211,106,.95);
+      text-shadow:0 10px 30px rgba(0,0,0,.7);
+    }
+
     .loginTitle{
       margin:0 0 10px;
       font-size:16px;
@@ -154,15 +182,6 @@
     .sectionTitle span{font-size:12px; color:rgba(246,242,255,.55)}
 
     .bonus{
-	.bonus.off{opacity:.55; filter:grayscale(1); pointer-events:auto;}
-	.bonus.off .chip{opacity:.7;}
-	.bonus.off .chip::after{
-  content:" • OFF";
-  color:rgba(255,170,210,.95);
-  font-weight:900;
-  letter-spacing:.12em;
-}
-
       border-radius:16px; overflow:hidden;
       border:1px solid rgba(255,255,255,.12);
       background:rgba(10,8,14,.55);
@@ -206,7 +225,7 @@
       background: radial-gradient(90% 120% at 50% 0%, rgba(245,211,106,.14), rgba(10,8,14,.88) 55%, rgba(10,8,14,.92));
       overflow:hidden;
       box-shadow:0 30px 90px rgba(0,0,0,.75);
-      max-height: calc(100vh - 32px); /* biar aman di HP */
+      max-height: calc(100vh - 32px);
       display:flex;
       flex-direction:column;
     }
@@ -224,7 +243,6 @@
       color:rgba(246,242,255,.9); font-weight:900; cursor:pointer;
     }
 
-    /* IMPORTANT: body scroll */
     .modalBody{
       padding:14px;
       overflow:auto;
@@ -250,7 +268,6 @@
       color:rgba(246,242,255,.95); font-weight:900; letter-spacing:.12em; text-transform:uppercase; cursor:pointer;
     }
 
-    /* Redeem (center card) */
     .redeemWrap{display:flex; justify-content:center; margin-top:6px;}
     .redeemCard{
       width:100%;
@@ -294,7 +311,7 @@
     .splitBtns{display:flex; gap:10px; margin-top:12px;}
     .splitBtns button{width:100%;}
 
-    /* ===== FIX DROPDOWN KETIMPA ===== */
+    /* FIX DROPDOWN KETIMPA */
     .modalBody{ position:relative; }
     .redeemWrap,.redeemCard{ position:relative; z-index:20; }
     .redeemRow{ position:relative; z-index:21; }
@@ -311,8 +328,20 @@
     <section id="loginPanel">
       <div class="loginPage">
         <div class="loginCard">
-          <img class="brandLogo" alt="Logo Brand"
-            src="https://api2-crb.imgnxb.com/images/POd13iqh6aE/logo_96c00afb-2339-4071-aabc-5685e6905423_1770126980960.gif">
+
+          <!-- ✅ LOGO LOCK (WRAP + FALLBACK) -->
+          <div class="brandWrap">
+            <img
+              class="brandLogo"
+              id="loginLogo"
+              alt="CERIABET"
+              src="https://api2-crb.imgnxb.com/images/POd13iqh6aE/logo_mobile_96c00afb-2339-4071-aabc-5685e6905423_1770661776940.gif"
+              loading="eager"
+              decoding="async"
+              draggable="false"
+            >
+            <div class="brandTextFallback" id="loginLogoText">CERIABET</div>
+          </div>
 
           <h2 class="loginTitle">MEMBER LOGIN</h2>
           <p class="loginDesc">Masukkan <b>ID/Username</b> member untuk masuk.</p>
@@ -350,13 +379,15 @@
         <span>Klik DETAIL</span>
       </div>
 
-      <!-- BONUS LIST (ONLY 2) -->
+      <!-- ✅ BONUS LIST (ONLY 1) -->
       <article class="bonus" data-title="BONUS POINT VIP & VVIP" data-key="CREDIT" data-mode="credit">
         <img src="http://plcl.me/images/HiCFo.png" alt="CREDIT">
         <div class="meta"><b>CREDIT</b><span class="chip" data-action="detail">DETAIL</span></div>
       </article>
 
-      <article class="bonus off" data-title="🎰 LUCKY SPIN" data-key="LUCKY SPIN" data-mode="lucky">
+      <!-- ✅ LUCKY SPIN DIHILANGKAN DARI BANNER -->
+    </section>
+  </div>
 
   <div class="toast" id="toast"></div>
 
@@ -426,16 +457,53 @@
 
   <script>
     // =============================
+    // ✅ LOGIN LOGO ALWAYS ON (LOCK)
+    // =============================
+    (function lockLoginLogo(){
+      const img  = document.getElementById("loginLogo");
+      const text = document.getElementById("loginLogoText");
+      if(!img) return;
+
+      const PRIMARY  = img.src;
+      const FALLBACK = "https://plcl.me/images/HiCFo.png"; // cadangan stabil
+
+      let triedFallback = false;
+
+      function showText(){
+        img.style.display = "none";
+        text.style.display = "flex";
+      }
+      function showImg(){
+        img.style.display = "block";
+        text.style.display = "none";
+      }
+
+      img.addEventListener("error", ()=>{
+        if(!triedFallback){
+          triedFallback = true;
+          img.src = FALLBACK + "?v=" + Date.now();
+        }else{
+          showText();
+        }
+      });
+
+      img.addEventListener("load", showImg);
+
+      // paksa reload sekali kalau cache/slow
+      setTimeout(()=>{
+        if(!img.complete || img.naturalWidth === 0){
+          img.src = PRIMARY + "?v=" + Date.now();
+        }
+      }, 800);
+    })();
+
+    // =============================
     // CONFIG
     // =============================
     const API_URL = "https://script.google.com/macros/s/AKfycbxHTVri7knpxXtBfFGL1yHDHPwZkaVa5xBpqsZIJ0UuW6tCA_vG1rXDtPzzWPo6gKwFfQ/exec";
     const WA_LINK  = "https://access.vpnceria.life/whatsappviip";
-	const FEATURE_LUCKY_SPIN = false; // OFF dulu, nanti kalau mau aktifin ganti true
-	const LUCKY_OFF_REASON = "Lucky Spin sedang ditutup sementara. Nanti kita aktifkan lagi ya 😊";
 
-    // =============================
     // UI helpers
-    // =============================
     const el = (id)=>document.getElementById(id);
     const toast = el("toast");
     function showToast(html){
@@ -445,9 +513,7 @@
       showToast._t = setTimeout(()=>toast.style.display="none", 2400);
     }
 
-    // =============================
     // JSONP (ANTI CORS)
-    // =============================
     function jsonpCall(params){
       return new Promise((resolve, reject)=>{
         const cb = "cb_" + Math.random().toString(16).slice(2);
@@ -474,9 +540,7 @@
     async function apiGetMember(id){ return await jsonpCall({ action:"getMember", id }); }
     async function apiClaim(id, bonus, amount){ return await jsonpCall({ action:"claim", id, bonus, amount }); }
 
-    // =============================
     // State
-    // =============================
     let currentMember = null;
     let currentBonus  = null;
 
@@ -494,9 +558,7 @@
       el("memberArea").style.display = "block";
     }
 
-    // =============================
     // LOGIN
-    // =============================
     const btnLogin = el("btnLogin");
     btnLogin.addEventListener("click", async ()=>{
       const raw = (el("idInput").value || "");
@@ -527,21 +589,12 @@
     });
     el("idInput").addEventListener("keydown",(e)=>{ if(e.key==="Enter") btnLogin.click(); });
 
-    // =============================
     // MODAL CONTENT
-    // =============================
     const CREDIT_TERMS = [
       "Berlaku hanya untuk Member VIP & VVIP",
       "Data member wajib valid & sesuai",
       "Maximal klaim per hari: 500 Poin",
       "Claim Berlaku Kelipatan 50 Poin"
-    ];
-    const LUCKY_TERMS = [
-      "Berlaku khusus untuk Member VIP & VVIP",
-      "Data member wajib valid dan sesuai",
-      "Klaim maksimal 1 kali per hari",
-      "Minimal klaim 1 tiket per hari",
-      "Maksimal klaim 5 tiket per hari"
     ];
     const WARNS = [
       "Kecurangan",
@@ -562,7 +615,6 @@
     }
     function setCalcHTML(html){ el("calcBox").innerHTML = html; }
 
-    // CREDIT: options 50..500
     function buildCreditOptions(memberPoin){
       const sel = el("redeemSelect");
       sel.innerHTML = "";
@@ -589,47 +641,12 @@
       }
     }
 
-    // LUCKY: options 1..5 tiket (convert to poin)
-    function buildLuckyTicketOptions(memberPoin){
-      const sel = el("redeemSelect");
-      sel.innerHTML = "";
-      let hasAny = false;
-
-      for(let t=1; t<=5; t++){
-        const need = 25 * t;
-        const opt = document.createElement("option");
-        opt.value = String(t);               // VALUE = tiket
-        opt.textContent = `${t} Tiket`;
-        if(need > memberPoin) opt.disabled = true;
-        else hasAny = true;
-        sel.appendChild(opt);
-      }
-
-      if(!hasAny){
-        sel.innerHTML = `<option value="">Poin tidak cukup</option>`;
-        sel.disabled = true;
-      }else{
-        sel.disabled = false;
-        // pilih tiket terbesar yang cukup
-        let best = 1;
-        for(let t=1; t<=5; t++){
-          if(25*t <= memberPoin) best = t;
-        }
-        sel.value = String(best);
-      }
-    }
-
-    function buildClaimText({id, poinNow, bonusName, amountPoints, tickets, after}){
-      let extra = "";
-      if(typeof tickets === "number"){
-        extra = `TIKET: ${tickets}\n`;
-      }
+    function buildClaimText({id, poinNow, bonusName, amountPoints, after}){
       return (
         `CLAIM BONUS POINT\n`+
         `USERNAME: ${id}\n`+
         `POIN: ${poinNow}\n`+
         `BONUS: ${bonusName}\n`+
-        extra+
         `PENUKARAN: ${amountPoints} Poin\n`+
         (typeof after === "number" ? `SISA: ${after} Poin\n` : ``)
       );
@@ -637,19 +654,10 @@
 
     function refreshRedeemHint(){
       if(!currentMember || !currentBonus) return;
-      const poin = Number(currentMember.poin ?? 0);
+      const v = Number(el("redeemSelect").value || 0);
       const hint = el("redeemHint");
-
-      if(currentBonus.mode === "lucky"){
-        const tiket = Number(el("redeemSelect").value || 0);
-        if(!tiket){ hint.textContent = "Poin tidak cukup untuk Lucky Spin."; return; }
-        const need = 25 * tiket;
-        hint.textContent = `Pilihan: ${tiket} Tiket = ${need} Poin`;
-      }else{
-        const v = Number(el("redeemSelect").value || 0);
-        if(!v){ hint.textContent = "Poin tidak cukup (min 50)."; return; }
-        hint.textContent = "Pilih poin yang mau ditukar (kelipatan 50).";
-      }
+      if(!v){ hint.textContent = "Poin tidak cukup (min 50)."; return; }
+      hint.textContent = "Pilih poin yang mau ditukar (kelipatan 50).";
     }
 
     function openModal(bonus){
@@ -659,39 +667,22 @@
       el("modalTitle").textContent = bonus.title;
 
       fillList("warnList", WARNS);
+      fillList("termList", CREDIT_TERMS);
 
       const id = currentMember.id || "-";
       const poin = Number(currentMember.poin ?? 0);
       el("rUser").textContent = id;
       el("rPoin").textContent = String(poin);
 
-      // mode switch UI label
-      if(bonus.mode === "lucky"){
-        el("redeemLabel").textContent = "TIKET";
-        fillList("termList", LUCKY_TERMS);
+      el("redeemLabel").textContent = "PENUKARAN";
+      setCalcHTML(
+        `TO <b style="color:var(--gold)">Rp2.000.000</b> = <b style="color:var(--gold)">1 Point</b><br/>` +
+        `<b style="color:var(--gold)">50 Point</b> = <b style="color:var(--gold)">50rb</b>`
+      );
 
-        setCalcHTML(
-          `TO <b style="color:var(--gold)">Rp2.000.000</b> = <b style="color:var(--gold)">1 Point</b><br/>` +
-          `<b style="color:var(--gold)">25 Point</b> = <b style="color:var(--gold)">1 Tiket Lucky Spin</b>`
-        );
-
-        buildLuckyTicketOptions(poin);
-        el("redeemSelect").onchange = refreshRedeemHint;
-        refreshRedeemHint();
-
-      }else{
-        el("redeemLabel").textContent = "PENUKARAN";
-        fillList("termList", CREDIT_TERMS);
-
-        setCalcHTML(
-          `TO <b style="color:var(--gold)">Rp2.000.000</b> = <b style="color:var(--gold)">1 Point</b><br/>` +
-          `<b style="color:var(--gold)">50 Point</b> = <b style="color:var(--gold)">50rb</b>`
-        );
-
-        buildCreditOptions(poin);
-        el("redeemSelect").onchange = refreshRedeemHint;
-        refreshRedeemHint();
-      }
+      buildCreditOptions(poin);
+      el("redeemSelect").onchange = refreshRedeemHint;
+      refreshRedeemHint();
 
       el("modalBack").classList.add("show");
     }
@@ -707,59 +698,37 @@
     document.addEventListener("keydown",(e)=>{ if(e.key==="Escape") closeModal(); });
 
     document.querySelectorAll('[data-action="detail"]').forEach(btn=>{
-  btn.addEventListener("click",(e)=>{
-    const card = e.target.closest(".bonus");
-    const mode = card.getAttribute("data-mode") || "credit";
-
-    // OFF Lucky Spin sementara
-    if(mode === "lucky" && !FEATURE_LUCKY_SPIN){
-      showToast(`⛔ <b>OFF</b> • ${LUCKY_OFF_REASON}`);
-      return;
-    }
-
-    openModal({
-      title: card.getAttribute("data-title") || "BONUS",
-      key: card.getAttribute("data-key") || "BONUS",
-      mode
+      btn.addEventListener("click",(e)=>{
+        const card = e.target.closest(".bonus");
+        openModal({
+          title: card.getAttribute("data-title") || "BONUS",
+          key: card.getAttribute("data-key") || "BONUS",
+          mode: card.getAttribute("data-mode") || "credit"
+        });
+      });
     });
-  });
-});
 
-
-    // copy helper
     async function copyText(text){
       try{ await navigator.clipboard.writeText(text); return true; }
       catch{ return false; }
     }
 
-    // SALIN (copy only)
     el("btnCopyCard").addEventListener("click", async ()=>{
       if(!currentMember){ showToast("Login dulu bro"); return; }
       if(!currentBonus){ showToast("Bonus belum dipilih"); return; }
 
       const id = currentMember.id;
       const poinNow = Number(currentMember.poin ?? 0);
+      const amountPoints = Number(el("redeemSelect").value || 0);
 
-      let amountPoints = 0;
-      let tickets = undefined;
-
-      if(currentBonus.mode === "lucky"){
-        tickets = Number(el("redeemSelect").value || 0);
-        if(!tickets){ showToast("Poin tidak cukup untuk Lucky Spin"); return; }
-        amountPoints = 25 * tickets;
-      }else{
-        amountPoints = Number(el("redeemSelect").value || 0);
-        if(!amountPoints){ showToast("Poin tidak cukup (min 50)"); return; }
-      }
-
+      if(!amountPoints){ showToast("Poin tidak cukup (min 50)"); return; }
       if(amountPoints > poinNow){ showToast("Poin kamu tidak cukup"); return; }
 
-      const text = buildClaimText({ id, poinNow, bonusName: currentBonus.title, amountPoints, tickets });
+      const text = buildClaimText({ id, poinNow, bonusName: currentBonus.title, amountPoints });
       const ok = await copyText(text);
       showToast(ok ? "✅ Tersalin. Tinggal tempel & claim" : "❌ Gagal salin (izin clipboard)");
     });
 
-    // CLAIM (API + auto copy + open WA)
     const btnClaim = el("btnClaim");
     btnClaim.addEventListener("click", async ()=>{
       if(!currentMember){ showToast("Login dulu"); return; }
@@ -768,19 +737,9 @@
       const id = currentMember.id;
       const bonusName = currentBonus.title;
       const poinNow = Number(currentMember.poin ?? 0);
+      const amountPoints = Number(el("redeemSelect").value || 0);
 
-      let amountPoints = 0;
-      let tickets = undefined;
-
-      if(currentBonus.mode === "lucky"){
-        tickets = Number(el("redeemSelect").value || 0);
-        if(!tickets){ showToast("Poin tidak cukup untuk Lucky Spin"); return; }
-        amountPoints = 25 * tickets;
-      }else{
-        amountPoints = Number(el("redeemSelect").value || 0);
-        if(!amountPoints){ showToast("Poin tidak cukup (min 50)"); return; }
-      }
-
+      if(!amountPoints){ showToast("Poin tidak cukup (min 50)"); return; }
       if(amountPoints > poinNow){ showToast("Poin kamu tidak cukup"); return; }
 
       btnClaim.disabled = true;
@@ -788,28 +747,24 @@
 
       try{
         const out = await apiClaim(id, bonusName, amountPoints);
-
         if(!out || !out.ok){
           showToast(`❌ Claim gagal: <b>${out?.error || "unknown"}</b>`);
           return;
         }
 
-        // update UI
         currentMember.poin = out.result.after;
         el("poinNow").textContent = String(out.result.after);
         el("rPoin").textContent = String(out.result.after);
 
         const claimText = buildClaimText({
-          id, poinNow, bonusName, amountPoints, tickets,
+          id, poinNow, bonusName, amountPoints,
           after: Number(out.result.after || 0)
         });
 
         await copyText(claimText);
 
-        // rebuild options after deduct
         const afterPoin = Number(out.result.after || 0);
-        if(currentBonus.mode === "lucky") buildLuckyTicketOptions(afterPoin);
-        else buildCreditOptions(afterPoin);
+        buildCreditOptions(afterPoin);
         refreshRedeemHint();
 
         window.open(WA_LINK, "_blank", "noopener,noreferrer");
@@ -825,7 +780,3 @@
   </script>
 </body>
 </html>
-
-
-
-
