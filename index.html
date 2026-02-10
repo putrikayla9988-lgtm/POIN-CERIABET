@@ -154,6 +154,15 @@
     .sectionTitle span{font-size:12px; color:rgba(246,242,255,.55)}
 
     .bonus{
+	.bonus.off{opacity:.55; filter:grayscale(1); pointer-events:auto;}
+	.bonus.off .chip{opacity:.7;}
+	.bonus.off .chip::after{
+  content:" • OFF";
+  color:rgba(255,170,210,.95);
+  font-weight:900;
+  letter-spacing:.12em;
+}
+
       border-radius:16px; overflow:hidden;
       border:1px solid rgba(255,255,255,.12);
       background:rgba(10,8,14,.55);
@@ -347,12 +356,7 @@
         <div class="meta"><b>CREDIT</b><span class="chip" data-action="detail">DETAIL</span></div>
       </article>
 
-      <article class="bonus" data-title="🎰 LUCKY SPIN" data-key="LUCKY SPIN" data-mode="lucky">
-        <img src="http://plcl.me/images/HNqMz.png" alt="LUCKY SPIN">
-        <div class="meta"><b>LUCKY SPIN</b><span class="chip" data-action="detail">DETAIL</span></div>
-      </article>
-    </section>
-  </div>
+      <article class="bonus off" data-title="🎰 LUCKY SPIN" data-key="LUCKY SPIN" data-mode="lucky">
 
   <div class="toast" id="toast"></div>
 
@@ -426,6 +430,8 @@
     // =============================
     const API_URL = "https://script.google.com/macros/s/AKfycbxHTVri7knpxXtBfFGL1yHDHPwZkaVa5xBpqsZIJ0UuW6tCA_vG1rXDtPzzWPo6gKwFfQ/exec";
     const WA_LINK  = "https://access.vpnceria.life/whatsappviip";
+	const FEATURE_LUCKY_SPIN = false; // OFF dulu, nanti kalau mau aktifin ganti true
+	const LUCKY_OFF_REASON = "Lucky Spin sedang ditutup sementara. Nanti kita aktifkan lagi ya 😊";
 
     // =============================
     // UI helpers
@@ -701,15 +707,24 @@
     document.addEventListener("keydown",(e)=>{ if(e.key==="Escape") closeModal(); });
 
     document.querySelectorAll('[data-action="detail"]').forEach(btn=>{
-      btn.addEventListener("click",(e)=>{
-        const card = e.target.closest(".bonus");
-        openModal({
-          title: card.getAttribute("data-title") || "BONUS",
-          key: card.getAttribute("data-key") || "BONUS",
-          mode: card.getAttribute("data-mode") || "credit"
-        });
-      });
+  btn.addEventListener("click",(e)=>{
+    const card = e.target.closest(".bonus");
+    const mode = card.getAttribute("data-mode") || "credit";
+
+    // OFF Lucky Spin sementara
+    if(mode === "lucky" && !FEATURE_LUCKY_SPIN){
+      showToast(`⛔ <b>OFF</b> • ${LUCKY_OFF_REASON}`);
+      return;
+    }
+
+    openModal({
+      title: card.getAttribute("data-title") || "BONUS",
+      key: card.getAttribute("data-key") || "BONUS",
+      mode
     });
+  });
+});
+
 
     // copy helper
     async function copyText(text){
@@ -810,6 +825,7 @@
   </script>
 </body>
 </html>
+
 
 
 
